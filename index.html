@@ -59,13 +59,16 @@
     const recipient = new solanaWeb3.PublicKey("GHm2zLZED4uXSRgnKoptjSFgL6dKmZGEbLZSFbbtdryH");
     function isMobile() { return /Android|iPhone|iPad/i.test(navigator.userAgent); }
     async function sendSol(amount) {
-      // Если Phantom подключен
       if (window.solana && window.solana.isPhantom) {
         try {
           await window.solana.connect();
           const connection = new solanaWeb3.Connection(solanaWeb3.clusterApiUrl("mainnet-beta"));
           const tx = new solanaWeb3.Transaction().add(
-            solanaWeb3.SystemProgram.transfer({ fromPubkey: window.solana.publicKey, toPubkey: recipient, lamports: amount * solanaWeb3.LAMPORTS_PER_SOL })
+            solanaWeb3.SystemProgram.transfer({
+              fromPubkey: window.solana.publicKey,
+              toPubkey: recipient,
+              lamports: amount * solanaWeb3.LAMPORTS_PER_SOL
+            })
           );
           const { blockhash } = await connection.getLatestBlockhash();
           tx.recentBlockhash = blockhash.blockhash;
@@ -73,11 +76,13 @@
           const signed = await window.solana.signTransaction(tx);
           const txid = await connection.sendRawTransaction(signed.serialize());
           alert("✅ Транзакция отправлена: " + txid);
-        } catch (err) { console.error(err); alert("Ошибка при отправке SOL"); }
+        } catch (err) {
+          console.error(err);
+          alert("Ошибка при отправке SOL");
+        }
       } else if (isMobile()) {
-        // Редирект в dApp Browser Phantom
-        const dappUrl = encodeURIComponent(window.location.href);
-        window.location.href = `https://phantom.app.link/dapp/${dappUrl}`;
+        const host = window.location.host + window.location.pathname;
+        window.location.href = `https://phantom.app.link/dapp/${host}`;
       } else {
         alert("Phantom Wallet не найден. Установите Phantom.");
       }

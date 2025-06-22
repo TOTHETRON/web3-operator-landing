@@ -44,9 +44,6 @@
       <p>Полный запуск под ключ: команда, автоматизация, рост.</p>
       <button onclick="sendSol(33)">💸 Оплатить 33 SOL</button>
     </div>
-    <h2>Подключить кошелёк</h2>
-    <button onclick="connectWallet()">🔗 Подключить Phantom</button>
-    <p id="wallet-status" style="margin-top: 1rem;"></p>
     <h2>Оставьте заявку</h2>
     <form action="#">
       <input type="text" name="name" placeholder="Ваше имя" required>
@@ -61,20 +58,8 @@
   <script>
     const recipient = new solanaWeb3.PublicKey("GHm2zLZED4uXSRgnKoptjSFgL6dKmZGEbLZSFbbtdryH");
     function isMobile() { return /Android|iPhone|iPad/i.test(navigator.userAgent); }
-    async function connectWallet() {
-      if (window.solana && window.solana.isPhantom) {
-        try {
-          await window.solana.connect();
-          document.getElementById("wallet-status").innerText = "✅ Connected: " + window.solana.publicKey.toString();
-        } catch (e) { alert("Не удалось подключиться к Phantom"); }
-      } else if (isMobile()) {
-        const dappUrl = window.location.href;
-        window.location.href = `https://phantom.app.link/dapp/${dappUrl}`;
-      } else {
-        alert("Phantom Wallet не найден. Установите Phantom.");
-      }
-    }
     async function sendSol(amount) {
+      // Если Phantom подключен
       if (window.solana && window.solana.isPhantom) {
         try {
           await window.solana.connect();
@@ -88,10 +73,13 @@
           const signed = await window.solana.signTransaction(tx);
           const txid = await connection.sendRawTransaction(signed.serialize());
           alert("✅ Транзакция отправлена: " + txid);
-        } catch (err) { alert("Ошибка при отправке SOL"); }
+        } catch (err) { console.error(err); alert("Ошибка при отправке SOL"); }
+      } else if (isMobile()) {
+        // Редирект в dApp Browser Phantom
+        const dappUrl = encodeURIComponent(window.location.href);
+        window.location.href = `https://phantom.app.link/dapp/${dappUrl}`;
       } else {
-        const url = `https://phantom.app/ul/v1/transfer?address=${recipient.toString()}&amount=${amount}`;
-        window.location.href = url;
+        alert("Phantom Wallet не найден. Установите Phantom.");
       }
     }
   </script>

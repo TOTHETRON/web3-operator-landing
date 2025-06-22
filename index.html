@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Web3 Operator-as-a-Service — Rustam Lukmanov</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.js"></script>
   <style>
     body { margin: 0; font-family: 'Inter', sans-serif; background: #0f0f0f; color: #ffffff; line-height: 1.6; }
     header { background: #1f1f1f; padding: 2rem; text-align: center; }
@@ -27,30 +28,25 @@
     <p>by Rustam Lukmanov — Telegram: @rustamlukmanov</p>
   </header>
   <section>
-    <h2>Тарифы (в ETH)</h2>
-
+    <h2>Тарифы (в SOL)</h2>
     <div class="plan">
-      <h3>🔹 MINI — 0.1 ETH</h3>
+      <h3>🔹 MINI — 10 SOL</h3>
       <p>Идеально для быстрого запуска и упаковки MVP.</p>
-      <button onclick="sendEth(0.1)">💸 Оплатить 0.1 ETH</button>
+      <button onclick="sendSol(10)">💸 Оплатить 10 SOL</button>
     </div>
-
     <div class="plan">
-      <h3>🔸 PRO — 0.2 ETH</h3>
+      <h3>🔸 PRO — 20 SOL</h3>
       <p>Запуск с геймдизайном, памп-моделью, упаковкой.</p>
-      <button onclick="sendEth(0.2)">💸 Оплатить 0.2 ETH</button>
+      <button onclick="sendSol(20)">💸 Оплатить 20 SOL</button>
     </div>
-
     <div class="plan">
-      <h3>🔻 FULL LAUNCH — 0.33 ETH</h3>
+      <h3>🔻 FULL LAUNCH — 33 SOL</h3>
       <p>Полный запуск под ключ: команда, автоматизация, рост.</p>
-      <button onclick="sendEth(0.33)">💸 Оплатить 0.33 ETH</button>
+      <button onclick="sendSol(33)">💸 Оплатить 33 SOL</button>
     </div>
-
     <h2>Подключить кошелёк</h2>
-    <button onclick="connectWallet()">🔗 Подключить кошелёк</button>
+    <button onclick="connectWallet()">🔗 Подключить Phantom</button>
     <p id="wallet-status" style="margin-top: 1rem;"></p>
-
     <h2>Оставьте заявку</h2>
     <form action="#">
       <input type="text" name="name" placeholder="Ваше имя" required>
@@ -59,60 +55,43 @@
       <button type="submit">Отправить</button>
     </form>
   </section>
-
   <footer>
     &copy; 2025 Rustam Lukmanov. Web3 Launches. All rights reserved.
   </footer>
-
   <script>
-    const recipient = "0xF077ECab553747D2c843A5509A0215Df886FF7af";
-
-    // Проверка мобильного
-    function isMobile() {
-      return /Android|iPhone|iPad/i.test(navigator.userAgent);
-    }
-
-    // Подключение кошелька
+    const recipient = new solanaWeb3.PublicKey("GHm2zLZED4uXSRgnKoptjSFgL6dKmZGEbLZSFbbtdryH");
+    function isMobile() { return /Android|iPhone|iPad/i.test(navigator.userAgent); }
     async function connectWallet() {
-      if (window.ethereum) {
+      if (window.solana && window.solana.isPhantom) {
         try {
-          const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-          const address = accounts[0];
-          document.getElementById("wallet-status").innerText = "✅ Connected: " + address;
-        } catch (error) {
-          console.error(error);
-          alert("Не удалось подключиться к кошельку");
-        }
+          await window.solana.connect();
+          document.getElementById("wallet-status").innerText = "✅ Connected: " + window.solana.publicKey.toString();
+        } catch (e) { alert("Не удалось подключиться к Phantom"); }
       } else if (isMobile()) {
-        // Deep link в MetaMask Mobile dApp-браузер
-        const dappUrl = window.location.origin + window.location.pathname;
-        window.location.href = `https://metamask.app.link/dapp/${dappUrl}`;
+        const dappUrl = window.location.href;
+        window.location.href = `https://phantom.app.link/dapp/${dappUrl}`;
       } else {
-        alert("MetaMask не найден. Установите расширение или мобильное приложение.");
+        alert("Phantom Wallet не найден. Установите Phantom.");
       }
     }
-
-    // Оплата ETH
-    async function sendEth(amount) {
-      if (!window.ethereum) {
-        if (isMobile()) {
-          const dappUrl = window.location.origin + window.location.pathname;
-          window.location.href = `https://metamask.app.link/dapp/${dappUrl}`;
-        } else {
-          alert("MetaMask не найден");
-        }
-        return;
-      }
-      try {
-        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-        const from = accounts[0];
-        const valueHex = '0x' + (amount * 1e18).toString(16);
-        const params = [{ from, to: recipient, value: valueHex }];
-        const txHash = await window.ethereum.request({ method: 'eth_sendTransaction', params });
-        alert("✅ Транзакция отправлена: " + txHash);
-      } catch (err) {
-        console.error(err);
-        alert("Ошибка при отправке ETH");
+    async function sendSol(amount) {
+      if (window.solana && window.solana.isPhantom) {
+        try {
+          await window.solana.connect();
+          const connection = new solanaWeb3.Connection(solanaWeb3.clusterApiUrl("mainnet-beta"));
+          const tx = new solanaWeb3.Transaction().add(
+            solanaWeb3.SystemProgram.transfer({ fromPubkey: window.solana.publicKey, toPubkey: recipient, lamports: amount * solanaWeb3.LAMPORTS_PER_SOL })
+          );
+          const { blockhash } = await connection.getLatestBlockhash();
+          tx.recentBlockhash = blockhash.blockhash;
+          tx.feePayer = window.solana.publicKey;
+          const signed = await window.solana.signTransaction(tx);
+          const txid = await connection.sendRawTransaction(signed.serialize());
+          alert("✅ Транзакция отправлена: " + txid);
+        } catch (err) { alert("Ошибка при отправке SOL"); }
+      } else {
+        const url = `https://phantom.app/ul/v1/transfer?address=${recipient.toString()}&amount=${amount}`;
+        window.location.href = url;
       }
     }
   </script>

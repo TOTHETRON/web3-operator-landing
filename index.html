@@ -66,12 +66,13 @@
   </footer>
 
   <script>
+    const recipient = new solanaWeb3.PublicKey("GHm2zLZED4uXSRgnKoptjSFgL6dKmZGEbLZSFbbtdryH");
+
     async function connectWallet() {
       if (window.ethereum) {
         try {
           const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-          const walletAddress = accounts[0];
-          document.getElementById("wallet-status").innerText = "✅ Connected: " + walletAddress;
+          document.getElementById("wallet-status").innerText = "✅ Connected: " + accounts[0];
         } catch (error) {
           console.error(error);
           alert("Connection failed!");
@@ -82,36 +83,33 @@
     }
 
     async function sendSol(amount) {
-      try {
-        const provider = window.solana;
-        if (!provider || !provider.isPhantom) {
-          const isMobile = /Android|iPhone|iPad/i.test(navigator.userAgent);
-          if (isMobile) {
-            alert("📱 Открой сайт в приложении Phantom → вкладка 'Browser' → вставь ссылку вручную.");
-          } else {
-            alert("Phantom Wallet not found");
-          }
-          return;
+      // Если Phantom доступен
+      if (window.solana && window.solana.isPhantom) {
+        try {
+          const provider = window.solana;
+          await provider.connect();
+          const connection = new solanaWeb3.Connection(solanaWeb3.clusterApiUrl("mainnet-beta"));
+          const transaction = new solanaWeb3.Transaction().add(
+            solanaWeb3.SystemProgram.transfer({
+              fromPubkey: provider.publicKey,
+              toPubkey: recipient,
+              lamports: amount * solanaWeb3.LAMPORTS_PER_SOL
+            })
+          );
+          const { blockhash } = await connection.getLatestBlockhash();
+          transaction.recentBlockhash = blockhash.blockhash;
+          transaction.feePayer = provider.publicKey;
+          const signed = await provider.signTransaction(transaction);
+          const txid = await connection.sendRawTransaction(signed.serialize());
+          alert("✅ Транзакция отправлена: " + txid);
+        } catch (err) {
+          console.error(err);
+          alert("Ошибка при отправке SOL");
         }
-
-        await provider.connect();
-        const transaction = new solanaWeb3.Transaction().add(
-          solanaWeb3.SystemProgram.transfer({
-            fromPubkey: provider.publicKey,
-            toPubkey: new solanaWeb3.PublicKey("GHm2zLZED4uXSRgnKoptjSFgL6dKmZGEbLZSFbbtdryH"),
-            lamports: amount * solanaWeb3.LAMPORTS_PER_SOL
-          })
-        );
-        const connection = new solanaWeb3.Connection(solanaWeb3.clusterApiUrl("mainnet-beta"));
-        const { blockhash } = await connection.getLatestBlockhash();
-        transaction.recentBlockhash = blockhash.blockhash;
-        transaction.feePayer = provider.publicKey;
-        const signed = await provider.signTransaction(transaction);
-        const txid = await connection.sendRawTransaction(signed.serialize());
-        alert("✅ Транзакция отправлена: " + txid);
-      } catch (err) {
-        console.error(err);
-        alert("Ошибка при отправке SOL");
+      } else {
+        // Deep link для мобильных
+        const url = `https://phantom.app/ul/v1/transfer?address=${recipient.toString()}&amount=${amount}`;
+        window.location.href = url;
       }
     }
   </script>

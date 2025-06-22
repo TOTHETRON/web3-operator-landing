@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Web3 Operator-as-a-Service — Rustam Lukmanov</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.js"></script>
   <style>
     body {
       margin: 0;
@@ -85,22 +86,29 @@
     <p>by Rustam Lukmanov — Telegram: @rustamlukmanov</p>
   </header>
   <section>
-    <h2>Тарифы</h2>
+    <h2>Тарифы (в SOL)</h2>
 
     <div class="plan">
-      <h3>🔹 MINI — от 150,000 ₽</h3>
+      <h3>🔹 MINI — 10 SOL</h3>
       <p>Идеально для быстрого запуска и упаковки MVP: whitepaper, токеномика, базовая стратегия и 10 ч консультаций.</p>
+      <button onclick="sendSol(10)">💸 Оплатить 10 SOL</button>
     </div>
 
     <div class="plan">
-      <h3>🔸 PRO — от 300,000 ₽</h3>
+      <h3>🔸 PRO — 20 SOL</h3>
       <p>Запуск с геймдизайном, амбассадорами, памп-моделью, визуальной упаковкой и инфроструктурой Telegram + Twitter.</p>
+      <button onclick="sendSol(20)">💸 Оплатить 20 SOL</button>
     </div>
 
     <div class="plan">
-      <h3>🔻 FULL LAUNCH — от 500,000 ₽</h3>
+      <h3>🔻 FULL LAUNCH — 33 SOL</h3>
       <p>Полный запуск Web3-продукта под ключ: команда, Dev, стратегия, автоматизация, поддержка и рост.</p>
+      <button onclick="sendSol(33)">💸 Оплатить 33 SOL</button>
     </div>
+
+    <h2>Подключить кошелёк</h2>
+    <button onclick="connectWallet()">🔗 Подключить MetaMask</button>
+    <p id="wallet-status" style="margin-top: 1rem;"></p>
 
     <h2>Оставьте заявку</h2>
     <form action="#">
@@ -114,5 +122,49 @@
   <footer>
     &copy; 2025 Rustam Lukmanov. Web3 Launches. All rights reserved.
   </footer>
+
+  <script>
+    async function connectWallet() {
+      if (window.ethereum) {
+        try {
+          const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+          const walletAddress = accounts[0];
+          document.getElementById("wallet-status").innerText = "✅ Connected: " + walletAddress;
+        } catch (error) {
+          console.error(error);
+          alert("Connection failed!");
+        }
+      } else {
+        alert("MetaMask not found. Please install it.");
+      }
+    }
+
+    async function sendSol(amount) {
+      try {
+        const provider = window.solana;
+        if (!provider || !provider.isPhantom) {
+          alert("Phantom Wallet not found");
+          return;
+        }
+        await provider.connect();
+        const transaction = new solanaWeb3.Transaction().add(
+          solanaWeb3.SystemProgram.transfer({
+            fromPubkey: provider.publicKey,
+            toPubkey: new solanaWeb3.PublicKey("GHm2zLZED4uXSRgnKoptjSFgL6dKmZGEbLZSFbbtdryH"),
+            lamports: amount * solanaWeb3.LAMPORTS_PER_SOL
+          })
+        );
+        const { blockhash } = await (new solanaWeb3.Connection(solanaWeb3.clusterApiUrl("mainnet-beta"))).getRecentBlockhash();
+        transaction.recentBlockhash = blockhash;
+        transaction.feePayer = provider.publicKey;
+        const signed = await provider.signTransaction(transaction);
+        const txid = await (new solanaWeb3.Connection(solanaWeb3.clusterApiUrl("mainnet-beta"))).sendRawTransaction(signed.serialize());
+        alert("✅ Транзакция отправлена: " + txid);
+      } catch (err) {
+        console.error(err);
+        alert("Ошибка при отправке SOL");
+      }
+    }
+  </script>
 </body>
 </html>

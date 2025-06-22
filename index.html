@@ -56,38 +56,44 @@
     &copy; 2025 Rustam Lukmanov. Web3 Launches. All rights reserved.
   </footer>
   <script>
-    console.log("window.solana:", window.solana);
-    console.log("solanaWeb3:", typeof solanaWeb3);
-    const recipient = new solanaWeb3.PublicKey("GHm2zLZED4uXSRgnKoptjSFgL6dKmZGEbLZSFbbtdryH");
+    // Solana получатель
+    const recipient = "GHm2zLZED4uXSRgnKoptjSFgL6dKmZGEbLZSFbbtdryH";
+    // Мобильный ли браузер?
     function isMobile() { return /Android|iPhone|iPad/i.test(navigator.userAgent); }
+
     async function sendSol(amount) {
-      console.log("sendSol called, provider:", window.solana);
+      // Если Phantom extension доступен (ПК)
       if (window.solana && window.solana.isPhantom) {
-        console.log("Phantom detected");
         try {
           await window.solana.connect();
-          console.log("Connected, publicKey:", window.solana.publicKey.toString());
           const connection = new solanaWeb3.Connection(solanaWeb3.clusterApiUrl("mainnet-beta"));
           const tx = new solanaWeb3.Transaction().add(
-            solanaWeb3.SystemProgram.transfer({ fromPubkey: window.solana.publicKey, toPubkey: recipient, lamports: amount * solanaWeb3.LAMPORTS_PER_SOL })
+            solanaWeb3.SystemProgram.transfer({
+              fromPubkey: window.solana.publicKey,
+              toPubkey: new solanaWeb3.PublicKey(recipient),
+              lamports: amount * solanaWeb3.LAMPORTS_PER_SOL
+            })
           );
           const { blockhash } = await connection.getLatestBlockhash();
           tx.recentBlockhash = blockhash.blockhash;
           tx.feePayer = window.solana.publicKey;
           const signed = await window.solana.signTransaction(tx);
-          console.log("Signed tx, sending...");
           const txid = await connection.sendRawTransaction(signed.serialize());
           alert("✅ Транзакция отправлена: " + txid);
         } catch (err) {
           console.error(err);
           alert("Ошибка при отправке SOL");
         }
-      } else if (isMobile()) {
-        const url = `https://phantom.app/ul/v1/transfer?address=${recipient.toString()}&amount=${amount}`;
-        console.log("Redirect mobile to:", url);
+      }
+      // Если мобильный — универсальная ссылка на Phantom App с предзаполненным переводом
+      else if (isMobile()) {
+        // Universal Link: откроет Phantom с предзаполненной транзакцией
+        const url = `https://phantom.app/ul/v1/transfer?address=${recipient}&amount=${amount}`;
         window.location.href = url;
-      } else {
-        alert("Phantom Wallet не найден. Установите Phantom.");
+      }
+      // Если ничего не найдено — показать сообщение
+      else {
+        alert("Phantom Wallet не найден. Установите расширение или приложение Phantom.");
       }
     }
   </script>

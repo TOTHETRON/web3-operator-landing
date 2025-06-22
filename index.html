@@ -65,7 +65,6 @@
   </footer>
 
   <script>
-    // Замените на ваш Ethereum адрес
     const recipient = "0xF077ECab553747D2c843A5509A0215Df886FF7af";
 
     async function connectWallet() {
@@ -92,11 +91,7 @@
         const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
         const from = accounts[0];
         const value = Math.round(amount * 1e18).toString(16);
-        const params = [{
-          from,
-          to: recipient,
-          value: '0x' + value
-        }];
+        const params = [{ from, to: recipient, value: '0x' + value }];
         const txHash = await window.ethereum.request({ method: 'eth_sendTransaction', params });
         alert("✅ Транзакция отправлена: " + txHash);
       } catch (err) {

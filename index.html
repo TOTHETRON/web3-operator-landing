@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Web3 Operator-as-a-Service — Rustam Lukmanov</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.js"></script>
   <style>
     body { margin: 0; font-family: 'Inter', sans-serif; background: #0f0f0f; color: #ffffff; line-height: 1.6; }
     header { background: #1f1f1f; padding: 2rem; text-align: center; }
@@ -28,28 +27,28 @@
     <p>by Rustam Lukmanov — Telegram: @rustamlukmanov</p>
   </header>
   <section>
-    <h2>Тарифы (в SOL)</h2>
+    <h2>Тарифы (в ETH)</h2>
 
     <div class="plan">
-      <h3>🔹 MINI — 10 SOL</h3>
+      <h3>🔹 MINI — 0.1 ETH</h3>
       <p>Идеально для быстрого запуска и упаковки MVP.</p>
-      <button onclick="sendSol(10)">💸 Оплатить 10 SOL</button>
+      <button onclick="sendEth(0.1)">💸 Оплатить 0.1 ETH</button>
     </div>
 
     <div class="plan">
-      <h3>🔸 PRO — 20 SOL</h3>
+      <h3>🔸 PRO — 0.2 ETH</h3>
       <p>Запуск с геймдизайном, памп-моделью, упаковкой.</p>
-      <button onclick="sendSol(20)">💸 Оплатить 20 SOL</button>
+      <button onclick="sendEth(0.2)">💸 Оплатить 0.2 ETH</button>
     </div>
 
     <div class="plan">
-      <h3>🔻 FULL LAUNCH — 33 SOL</h3>
+      <h3>🔻 FULL LAUNCH — 0.33 ETH</h3>
       <p>Полный запуск под ключ: команда, автоматизация, рост.</p>
-      <button onclick="sendSol(33)">💸 Оплатить 33 SOL</button>
+      <button onclick="sendEth(0.33)">💸 Оплатить 0.33 ETH</button>
     </div>
 
-    <h2>Подключить кошелёк</h2>
-    <button onclick="connectWallet()">🔗 Подключить MetaMask</button>
+    <h2>Подключить MetaMask</h2>
+    <button onclick="connectWallet()">🔗 Подключить кошелёк</button>
     <p id="wallet-status" style="margin-top: 1rem;"></p>
 
     <h2>Оставьте заявку</h2>
@@ -66,50 +65,43 @@
   </footer>
 
   <script>
-    const recipient = new solanaWeb3.PublicKey("GHm2zLZED4uXSRgnKoptjSFgL6dKmZGEbLZSFbbtdryH");
+    // Замените на ваш Ethereum адрес
+    const recipient = "0xF077ECab553747D2c843A5509A0215Df886FF7af";
 
     async function connectWallet() {
       if (window.ethereum) {
         try {
           const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-          document.getElementById("wallet-status").innerText = "✅ Connected: " + accounts[0];
+          const address = accounts[0];
+          document.getElementById("wallet-status").innerText = "✅ Connected: " + address;
         } catch (error) {
           console.error(error);
-          alert("Connection failed!");
+          alert("Не удалось подключиться к кошельку");
         }
       } else {
-        alert("MetaMask not found. Please install it.");
+        alert("MetaMask не найден. Установите расширение или мобильное приложение.");
       }
     }
 
-    async function sendSol(amount) {
-      // Если Phantom доступен
-      if (window.solana && window.solana.isPhantom) {
-        try {
-          const provider = window.solana;
-          await provider.connect();
-          const connection = new solanaWeb3.Connection(solanaWeb3.clusterApiUrl("mainnet-beta"));
-          const transaction = new solanaWeb3.Transaction().add(
-            solanaWeb3.SystemProgram.transfer({
-              fromPubkey: provider.publicKey,
-              toPubkey: recipient,
-              lamports: amount * solanaWeb3.LAMPORTS_PER_SOL
-            })
-          );
-          const { blockhash } = await connection.getLatestBlockhash();
-          transaction.recentBlockhash = blockhash.blockhash;
-          transaction.feePayer = provider.publicKey;
-          const signed = await provider.signTransaction(transaction);
-          const txid = await connection.sendRawTransaction(signed.serialize());
-          alert("✅ Транзакция отправлена: " + txid);
-        } catch (err) {
-          console.error(err);
-          alert("Ошибка при отправке SOL");
-        }
-      } else {
-        // Deep link для мобильных
-        const url = `https://phantom.app/ul/v1/transfer?address=${recipient.toString()}&amount=${amount}`;
-        window.location.href = url;
+    async function sendEth(amount) {
+      if (!window.ethereum) {
+        alert("MetaMask не найден");
+        return;
+      }
+      try {
+        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+        const from = accounts[0];
+        const value = Math.round(amount * 1e18).toString(16);
+        const params = [{
+          from,
+          to: recipient,
+          value: '0x' + value
+        }];
+        const txHash = await window.ethereum.request({ method: 'eth_sendTransaction', params });
+        alert("✅ Транзакция отправлена: " + txHash);
+      } catch (err) {
+        console.error(err);
+        alert("Ошибка при отправке ETH");
       }
     }
   </script>

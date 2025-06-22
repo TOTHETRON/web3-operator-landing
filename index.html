@@ -47,7 +47,7 @@
       <button onclick="sendEth(0.33)">💸 Оплатить 0.33 ETH</button>
     </div>
 
-    <h2>Подключить MetaMask</h2>
+    <h2>Подключить кошелёк</h2>
     <button onclick="connectWallet()">🔗 Подключить кошелёк</button>
     <p id="wallet-status" style="margin-top: 1rem;"></p>
 
@@ -67,6 +67,12 @@
   <script>
     const recipient = "0xF077ECab553747D2c843A5509A0215Df886FF7af";
 
+    // Проверка мобильного
+    function isMobile() {
+      return /Android|iPhone|iPad/i.test(navigator.userAgent);
+    }
+
+    // Подключение кошелька
     async function connectWallet() {
       if (window.ethereum) {
         try {
@@ -77,21 +83,31 @@
           console.error(error);
           alert("Не удалось подключиться к кошельку");
         }
+      } else if (isMobile()) {
+        // Deep link в MetaMask Mobile dApp-браузер
+        const dappUrl = window.location.origin + window.location.pathname;
+        window.location.href = `https://metamask.app.link/dapp/${dappUrl}`;
       } else {
         alert("MetaMask не найден. Установите расширение или мобильное приложение.");
       }
     }
 
+    // Оплата ETH
     async function sendEth(amount) {
       if (!window.ethereum) {
-        alert("MetaMask не найден");
+        if (isMobile()) {
+          const dappUrl = window.location.origin + window.location.pathname;
+          window.location.href = `https://metamask.app.link/dapp/${dappUrl}`;
+        } else {
+          alert("MetaMask не найден");
+        }
         return;
       }
       try {
         const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
         const from = accounts[0];
-        const value = Math.round(amount * 1e18).toString(16);
-        const params = [{ from, to: recipient, value: '0x' + value }];
+        const valueHex = '0x' + (amount * 1e18).toString(16);
+        const params = [{ from, to: recipient, value: valueHex }];
         const txHash = await window.ethereum.request({ method: 'eth_sendTransaction', params });
         alert("✅ Транзакция отправлена: " + txHash);
       } catch (err) {

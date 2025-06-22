@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -30,24 +29,29 @@
   </header>
   <section>
     <h2>Тарифы (в SOL)</h2>
+
     <div class="plan">
       <h3>🔹 MINI — 10 SOL</h3>
       <p>Идеально для быстрого запуска и упаковки MVP.</p>
       <button onclick="sendSol(10)">💸 Оплатить 10 SOL</button>
     </div>
+
     <div class="plan">
       <h3>🔸 PRO — 20 SOL</h3>
       <p>Запуск с геймдизайном, памп-моделью, упаковкой.</p>
       <button onclick="sendSol(20)">💸 Оплатить 20 SOL</button>
     </div>
+
     <div class="plan">
       <h3>🔻 FULL LAUNCH — 33 SOL</h3>
       <p>Полный запуск под ключ: команда, автоматизация, рост.</p>
       <button onclick="sendSol(33)">💸 Оплатить 33 SOL</button>
     </div>
+
     <h2>Подключить кошелёк</h2>
     <button onclick="connectWallet()">🔗 Подключить MetaMask</button>
     <p id="wallet-status" style="margin-top: 1rem;"></p>
+
     <h2>Оставьте заявку</h2>
     <form action="#">
       <input type="text" name="name" placeholder="Ваше имя" required>
@@ -56,9 +60,11 @@
       <button type="submit">Отправить</button>
     </form>
   </section>
+
   <footer>
     &copy; 2025 Rustam Lukmanov. Web3 Launches. All rights reserved.
   </footer>
+
   <script>
     async function connectWallet() {
       if (window.ethereum) {
@@ -81,12 +87,13 @@
         if (!provider || !provider.isPhantom) {
           const isMobile = /Android|iPhone|iPad/i.test(navigator.userAgent);
           if (isMobile) {
-            alert("📱 Открой сайт через приложение Phantom → Вкладка ‘Browser’ → вставьте эту ссылку вручную.");
+            alert("📱 Открой сайт в приложении Phantom → вкладка 'Browser' → вставь ссылку вручную.");
           } else {
             alert("Phantom Wallet not found");
           }
           return;
         }
+
         await provider.connect();
         const transaction = new solanaWeb3.Transaction().add(
           solanaWeb3.SystemProgram.transfer({
@@ -96,8 +103,8 @@
           })
         );
         const connection = new solanaWeb3.Connection(solanaWeb3.clusterApiUrl("mainnet-beta"));
-        const { blockhash } = await connection.getRecentBlockhash();
-        transaction.recentBlockhash = blockhash;
+        const { blockhash } = await connection.getLatestBlockhash();
+        transaction.recentBlockhash = blockhash.blockhash;
         transaction.feePayer = provider.publicKey;
         const signed = await provider.signTransaction(transaction);
         const txid = await connection.sendRawTransaction(signed.serialize());

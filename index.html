@@ -4,24 +4,119 @@
   <meta charset="UTF-8">
   <title>$WARLON — The Solana Warlord Meme Token</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!-- Tailwind CDN for fastest launch -->
+  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- GSAP for Animations -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <meta name="description" content="$WARLON: The ultimate degen Solana meme-token, led by the Warlord himself. No mercy. Only pumps.">
   <link rel="icon" href="images/warlon-hero.png">
+  <style>
+    /* Lightning effect */
+    .lightning {
+      position: absolute;
+      left: 50%;
+      top: 25%;
+      width: 220px;
+      height: 220px;
+      z-index: 2;
+      transform: translateX(-50%);
+      pointer-events: none;
+      opacity: 0.7;
+      filter: drop-shadow(0 0 32px #10ff55) brightness(1.2);
+      animation: flicker 1.1s infinite alternate;
+    }
+    @keyframes flicker {
+      0% { opacity: 0.45;}
+      48% { opacity: 0.9;}
+      51% { opacity: 1;}
+      60% { opacity: 0.35;}
+      100% { opacity: 0.7;}
+    }
+    /* Candle chart (bullish) */
+    .candle {
+      display: inline-block;
+      width: 8px;
+      height: 32px;
+      margin: 0 2px;
+      background: linear-gradient(to top, #10ff55 80%, #0b0e13 100%);
+      border-radius: 2px;
+      box-shadow: 0 0 8px #10ff55a0;
+      position: relative;
+      animation: candle-bounce 1.2s infinite;
+    }
+    .candle:after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: -10px;
+      width: 2px;
+      height: 10px;
+      background: #10ff55;
+      transform: translateX(-50%);
+      border-radius: 1px;
+      opacity: 0.7;
+    }
+    @keyframes candle-bounce {
+      0%, 100% { height: 24px;}
+      50% { height: 42px;}
+    }
+    /* Lightning background wrapper */
+    .lightning-bg {
+      position: absolute;
+      left: 0; top: 0; width: 100%; height: 100%;
+      z-index: 1; pointer-events: none;
+    }
+  </style>
 </head>
-<body class="bg-[#0b0e13] text-white font-mono">
+<body class="bg-[#0b0e13] text-white font-mono overflow-x-hidden">
 
   <!-- HERO -->
-  <section class="flex flex-col items-center justify-center py-12 px-4 bg-gradient-to-b from-[#071d0f] to-[#0b0e13] border-b border-[#202] relative">
-    <img src="images/warlon-hero.png" alt="WARLON HERO" class="w-44 h-44 mb-5 rounded-full border-4 border-[#10ff55] shadow-lg" />
-    <h1 class="text-5xl md:text-6xl font-extrabold text-[#10ff55] tracking-wide mb-2">$WARLON</h1>
-    <p class="text-2xl mb-6 font-semibold">The Solana Warlord Has Entered The Arena</p>
-    <a href="https://pump.fun/" target="_blank"
-       class="bg-[#10ff55] text-[#111] font-bold px-10 py-4 rounded-full text-xl shadow-md hover:bg-[#28ff6f] transition mb-6">
+  <section class="flex flex-col items-center justify-center py-12 px-4 bg-gradient-to-b from-[#071d0f] to-[#0b0e13] border-b border-[#202] relative overflow-hidden">
+    <!-- Lightning effect SVG -->
+    <div class="lightning-bg">
+      <svg class="lightning" viewBox="0 0 200 200">
+        <polyline points="100,0 110,55 80,95 120,120 90,200"
+          stroke="#10ff55" stroke-width="8" fill="none"
+          stroke-linecap="round" stroke-linejoin="round"
+          filter="url(#glow)"/>
+        <defs>
+          <filter id="glow">
+            <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+            <feMerge>
+              <feMergeNode in="coloredBlur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+        </defs>
+      </svg>
+    </div>
+    <img src="images/warlon-hero.png" alt="WARLON HERO" class="w-44 h-44 mb-5 rounded-full border-4 border-[#10ff55] shadow-lg z-10" />
+    <h1 class="text-5xl md:text-6xl font-extrabold text-[#10ff55] tracking-wide mb-2 z-10">$WARLON</h1>
+    <p class="text-2xl mb-6 font-semibold z-10">The Solana Warlord Has Entered The Arena</p>
+    <!-- LIVE SOL Price Widget -->
+    <div class="flex flex-col items-center mb-4 z-10">
+      <span class="text-md opacity-75 mb-1">SOL Price</span>
+      <span id="sol-price" class="text-2xl font-bold text-[#10ff55]">$--.--</span>
+    </div>
+    <!-- BUY Button -->
+    <a href="https://pump.fun/6hnju82mXsgoQkYexCXWdHw7owHb5MQnpFtPqMBpump"
+       target="_blank"
+       class="bg-[#10ff55] text-[#111] font-bold px-10 py-4 rounded-full text-xl shadow-md hover:bg-[#28ff6f] transition mb-6 z-10">
       BUY $WARLON
     </a>
+    <!-- Animated candles (mini chart) -->
+    <div class="flex gap-1 mb-6 z-10">
+      <div class="candle" style="animation-delay:0s"></div>
+      <div class="candle" style="animation-delay:0.15s"></div>
+      <div class="candle" style="animation-delay:0.35s"></div>
+      <div class="candle" style="animation-delay:0.22s"></div>
+      <div class="candle" style="animation-delay:0.27s"></div>
+      <div class="candle" style="animation-delay:0.41s"></div>
+      <div class="candle" style="animation-delay:0.2s"></div>
+      <div class="candle" style="animation-delay:0.08s"></div>
+    </div>
     <!-- Social -->
-    <div class="flex gap-5 mb-3">
+    <div class="flex gap-5 mb-3 z-10">
       <a href="https://twitter.com/warloncoin" target="_blank" title="X">
         <img src="images/x.svg" class="w-7" alt="X" />
       </a>
@@ -35,16 +130,16 @@
         <img src="images/dexscreener.svg" class="w-7" alt="Dexscreener" />
       </a>
     </div>
-    <div class="text-xs bg-[#1c2420] px-3 py-1 rounded font-mono">CA: 6hnju82mXsgoQkYexCXWdHw7owHb5MQnpFtPqMBpump</div>
+    <div class="text-xs bg-[#1c2420] px-3 py-1 rounded font-mono z-10">CA: 6hnju82mXsgoQkYexCXWdHw7owHb5MQnpFtPqMBpump</div>
   </section>
 
   <!-- WHAT IS WARLON -->
   <section class="flex flex-col items-center pt-14 pb-8">
     <h2 class="text-2xl font-extrabold mb-3 uppercase tracking-widest text-[#10ff55]">WHAT IS WARLON?</h2>
     <p class="max-w-2xl text-center text-lg opacity-85 mb-5">
-      $WARLON is the meme-token of Solana's new overlord.  
-      Unstoppable, unliquidated, armored for the bullrun.  
-      The only token that fights the bears with pure, nuclear pump energy.  
+      $WARLON is the meme-token of Solana's new overlord.<br>
+      Unstoppable, unliquidated, armored for the bullrun.<br>
+      The only token that fights the bears with pure, nuclear pump energy.<br>
       Join the WARLORDS. Flex your $WARLON.
     </p>
   </section>
@@ -60,6 +155,84 @@
     </div>
   </section>
 
+  <!-- TOKENOMICS -->
+  <section class="py-12 flex flex-col items-center bg-[#0f1318] border-t border-[#202]">
+    <h3 class="text-2xl font-bold mb-5 uppercase text-[#10ff55]">Tokenomics</h3>
+    <div class="max-w-2xl w-full flex flex-col md:flex-row md:justify-between gap-6 md:gap-12">
+      <div>
+        <span class="block text-lg font-semibold mb-1">$WARLON Supply</span>
+        <span class="block text-2xl font-bold">1,000,000,000</span>
+      </div>
+      <div>
+        <span class="block text-lg font-semibold mb-1">Tax</span>
+        <span class="block text-2xl font-bold">0%</span>
+      </div>
+      <div>
+        <span class="block text-lg font-semibold mb-1">Liquidity</span>
+        <span class="block text-2xl font-bold">100% Burned</span>
+      </div>
+      <div>
+        <span class="block text-lg font-semibold mb-1">Contract Renounced</span>
+        <span class="block text-2xl font-bold">Yes</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ROADMAP -->
+  <section class="py-12 flex flex-col items-center bg-[#161d18] border-t border-[#202]">
+    <h3 class="text-2xl font-bold mb-5 uppercase text-[#10ff55]">Roadmap</h3>
+    <ol class="max-w-2xl list-decimal pl-8 text-lg opacity-90">
+      <li><b>Phase 1:</b> Launch, Meme Attack, Community Invasion</li>
+      <li><b>Phase 2:</b> Listings (DEXScreener, Solscan, pump.fun), Influencer Strikes</li>
+      <li><b>Phase 3:</b> Warlord NFT Drops, Meme Contests, Telegram Army</li>
+      <li><b>Phase 4:</b> DAO Experiments, Future Utility, Cross-chain Raid</li>
+    </ol>
+  </section>
+
+  <!-- FAQ -->
+  <section class="py-12 flex flex-col items-center bg-[#181b1f] border-t border-[#202]">
+    <h3 class="text-2xl font-bold mb-5 uppercase text-[#10ff55]">FAQ</h3>
+    <div class="max-w-2xl w-full flex flex-col gap-5">
+      <div>
+        <span class="font-bold text-[#10ff55]">How to buy $WARLON?</span><br>
+        <span>
+          Just connect your wallet (Phantom/Solflare), click <b>BUY $WARLON</b> and swap on pump.fun or your favorite DEX.
+        </span>
+      </div>
+      <div>
+        <span class="font-bold text-[#10ff55]">Is $WARLON a real project?</span><br>
+        <span>
+          This is a 100% meme-driven token. Zero utility, infinite community. Pump responsibly!
+        </span>
+      </div>
+      <div>
+        <span class="font-bold text-[#10ff55]">Where is the community?</span><br>
+        <span>
+          Twitter, Telegram, and the official <b>X Community</b> — join below!
+        </span>
+      </div>
+      <div>
+        <span class="font-bold text-[#10ff55]">Who is the Warlord?</span><br>
+        <span>
+          The legend is still unfolding. But he wears green armor and crushes bears.
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <!-- JOIN THE ARMY -->
+  <section class="py-16 flex flex-col items-center bg-[#0b0e13]">
+    <h3 class="text-2xl font-bold mb-5 uppercase text-[#10ff55]">Join the Army</h3>
+    <p class="mb-8 text-lg max-w-xl text-center opacity-85">
+      Become part of the $WARLON invasion.<br>
+      Access secret missions, meme drops, and warlord updates in our X Community!
+    </p>
+    <a href="https://x.com/WARLON/communities" target="_blank"
+       class="bg-[#10ff55] text-[#111] font-bold px-10 py-4 rounded-full text-xl shadow-md hover:bg-[#28ff6f] transition">
+      JOIN THE ARMY
+    </a>
+  </section>
+
   <!-- FOOTER -->
   <footer class="flex flex-col items-center py-8 text-sm opacity-60 mt-8">
     <div class="mb-1">© 2025 WARLON. All rights reserved. For degen use only. Pump at your own risk.</div>
@@ -68,5 +241,29 @@
       <a href="https://t.me/warloncoin" class="hover:underline">Telegram</a>
     </div>
   </footer>
+
+  <!-- JS: Live SOL price -->
+  <script>
+    async function updateSolPrice() {
+      try {
+        const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd');
+        const data = await res.json();
+        document.getElementById('sol-price').textContent = `$${data.solana.usd.toFixed(2)}`;
+      } catch {
+        document.getElementById('sol-price').textContent = 'N/A';
+      }
+    }
+    updateSolPrice();
+    setInterval(updateSolPrice, 60000); // обновлять раз в минуту
+
+    // Lightning GSAP animation
+    gsap.to('.lightning', {
+      y: 20,
+      repeat: -1,
+      yoyo: true,
+      duration: 0.7,
+      ease: "power1.inOut"
+    });
+  </script>
 </body>
 </html>

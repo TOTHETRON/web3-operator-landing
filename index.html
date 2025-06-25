@@ -2,26 +2,19 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>$WARLON — The Solana Warlord Meme Token</title>
+  <title>$WARLON — Solana Meme Token</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- GSAP for Animations -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-  <meta name="description" content="$WARLON: The ultimate degen Solana meme-token, led by the Warlord himself. No mercy. Only pumps.">
+  <meta name="description" content="$WARLON: Degen Solana meme-token. Unstoppable.">
   <link rel="icon" href="images/warlon-hero.png">
   <style>
     /* Lightning effect */
     .lightning {
-      position: absolute;
-      left: 50%;
-      top: 25%;
-      width: 220px;
-      height: 220px;
-      z-index: 2;
-      transform: translateX(-50%);
-      pointer-events: none;
-      opacity: 0.7;
+      position: absolute; left: 50%; top: 22%;
+      width: 210px; height: 210px;
+      z-index: 2; transform: translateX(-50%);
+      pointer-events: none; opacity: 0.7;
       filter: drop-shadow(0 0 32px #10ff55) brightness(1.2);
       animation: flicker 1.1s infinite alternate;
     }
@@ -32,38 +25,23 @@
       60% { opacity: 0.35;}
       100% { opacity: 0.7;}
     }
-    /* Candle chart (bullish) */
     .candle {
-      display: inline-block;
-      width: 8px;
-      height: 32px;
-      margin: 0 2px;
-      background: linear-gradient(to top, #10ff55 80%, #0b0e13 100%);
-      border-radius: 2px;
-      box-shadow: 0 0 8px #10ff55a0;
-      position: relative;
-      animation: candle-bounce 1.2s infinite;
+      display: inline-block; width: 8px; height: 32px;
+      margin: 0 2px; background: linear-gradient(to top, #10ff55 80%, #0b0e13 100%);
+      border-radius: 2px; box-shadow: 0 0 8px #10ff55a0;
+      position: relative; animation: candle-bounce 1.2s infinite;
     }
     .candle:after {
-      content: "";
-      position: absolute;
-      left: 50%;
-      top: -10px;
-      width: 2px;
-      height: 10px;
-      background: #10ff55;
-      transform: translateX(-50%);
-      border-radius: 1px;
-      opacity: 0.7;
+      content: ""; position: absolute; left: 50%; top: -10px;
+      width: 2px; height: 10px; background: #10ff55;
+      transform: translateX(-50%); border-radius: 1px; opacity: 0.7;
     }
     @keyframes candle-bounce {
       0%, 100% { height: 24px;}
       50% { height: 42px;}
     }
-    /* Lightning background wrapper */
     .lightning-bg {
-      position: absolute;
-      left: 0; top: 0; width: 100%; height: 100%;
+      position: absolute; left: 0; top: 0; width: 100%; height: 100%;
       z-index: 1; pointer-events: none;
     }
   </style>
@@ -72,7 +50,7 @@
 
   <!-- HERO -->
   <section class="flex flex-col items-center justify-center py-12 px-4 bg-gradient-to-b from-[#071d0f] to-[#0b0e13] border-b border-[#202] relative overflow-hidden">
-    <!-- Lightning effect SVG -->
+    <!-- Lightning SVG -->
     <div class="lightning-bg">
       <svg class="lightning" viewBox="0 0 200 200">
         <polyline points="100,0 110,55 80,95 120,120 90,200"
@@ -92,7 +70,7 @@
     </div>
     <img src="images/warlon-hero.png" alt="WARLON HERO" class="w-44 h-44 mb-5 rounded-full border-4 border-[#10ff55] shadow-lg z-10" />
     <h1 class="text-5xl md:text-6xl font-extrabold text-[#10ff55] tracking-wide mb-2 z-10">$WARLON</h1>
-    <p class="text-2xl mb-6 font-semibold z-10">The Solana Warlord Has Entered The Arena</p>
+    <p class="text-2xl mb-6 font-semibold z-10">Solana's Warlord Meme Token</p>
     <!-- LIVE SOL Price Widget -->
     <div class="flex flex-col items-center mb-4 z-10">
       <span class="text-md opacity-75 mb-1">SOL Price</span>
@@ -104,7 +82,7 @@
        class="bg-[#10ff55] text-[#111] font-bold px-10 py-4 rounded-full text-xl shadow-md hover:bg-[#28ff6f] transition mb-6 z-10">
       BUY $WARLON
     </a>
-    <!-- Animated candles (mini chart) -->
+    <!-- Candles (mini chart) -->
     <div class="flex gap-1 mb-6 z-10">
       <div class="candle" style="animation-delay:0s"></div>
       <div class="candle" style="animation-delay:0.15s"></div>
@@ -137,9 +115,9 @@
   <section class="flex flex-col items-center pt-14 pb-8">
     <h2 class="text-2xl font-extrabold mb-3 uppercase tracking-widest text-[#10ff55]">WHAT IS WARLON?</h2>
     <p class="max-w-2xl text-center text-lg opacity-85 mb-5">
-      $WARLON is the meme-token of Solana's new overlord.<br>
-      Unstoppable, unliquidated, armored for the bullrun.<br>
-      The only token that fights the bears with pure, nuclear pump energy.<br>
+      $WARLON is the meme-token of Solana's overlord.<br>
+      Unstoppable. Unliquidated. Armored for bullrun.<br>
+      The only token that fights the bears with nuclear pump energy.<br>
       Join the WARLORDS. Flex your $WARLON.
     </p>
   </section>
@@ -148,10 +126,10 @@
   <section class="py-8 px-2 bg-[#101915] flex flex-col items-center">
     <h3 class="text-xl font-semibold mb-6 text-[#10ff55]">Memes of Power</h3>
     <div class="grid grid-cols-2 md:grid-cols-4 gap-5 max-w-5xl w-full mb-4">
-      <img src="memes/meme1.png" alt="Warlon Meme 1" class="rounded-xl shadow" />
-      <img src="memes/meme2.png" alt="Warlon Meme 2" class="rounded-xl shadow" />
-      <img src="memes/meme3.png" alt="Warlon Meme 3" class="rounded-xl shadow" />
-      <img src="memes/meme4.png" alt="Warlon Meme 4" class="rounded-xl shadow" />
+      <img src="memes/meme1.png" alt="Meme 1" class="rounded-xl shadow" />
+      <img src="memes/meme2.png" alt="Meme 2" class="rounded-xl shadow" />
+      <img src="memes/meme3.png" alt="Meme 3" class="rounded-xl shadow" />
+      <img src="memes/meme4.png" alt="Meme 4" class="rounded-xl shadow" />
     </div>
   </section>
 
@@ -196,19 +174,19 @@
       <div>
         <span class="font-bold text-[#10ff55]">How to buy $WARLON?</span><br>
         <span>
-          Just connect your wallet (Phantom/Solflare), click <b>BUY $WARLON</b> and swap on pump.fun or your favorite DEX.
+          Connect your wallet (Phantom/Solflare), click <b>BUY $WARLON</b> and swap on pump.fun or any Solana DEX.
         </span>
       </div>
       <div>
         <span class="font-bold text-[#10ff55]">Is $WARLON a real project?</span><br>
         <span>
-          This is a 100% meme-driven token. Zero utility, infinite community. Pump responsibly!
+          100% meme. Zero utility, infinite community. Pump responsibly!
         </span>
       </div>
       <div>
         <span class="font-bold text-[#10ff55]">Where is the community?</span><br>
         <span>
-          Twitter, Telegram, and the official <b>X Community</b> — join below!
+          Twitter, Telegram, and <b>X Community</b> — join below!
         </span>
       </div>
       <div>
@@ -225,7 +203,7 @@
     <h3 class="text-2xl font-bold mb-5 uppercase text-[#10ff55]">Join the Army</h3>
     <p class="mb-8 text-lg max-w-xl text-center opacity-85">
       Become part of the $WARLON invasion.<br>
-      Access secret missions, meme drops, and warlord updates in our X Community!
+      Secret missions, meme drops, warlord updates in our X Community!
     </p>
     <a href="https://x.com/WARLON/communities" target="_blank"
        class="bg-[#10ff55] text-[#111] font-bold px-10 py-4 rounded-full text-xl shadow-md hover:bg-[#28ff6f] transition">
@@ -235,14 +213,14 @@
 
   <!-- FOOTER -->
   <footer class="flex flex-col items-center py-8 text-sm opacity-60 mt-8">
-    <div class="mb-1">© 2025 WARLON. All rights reserved. For degen use only. Pump at your own risk.</div>
+    <div class="mb-1">© 2025 WARLON. All rights reserved. For degen use only.</div>
     <div class="flex gap-4">
       <a href="https://twitter.com/warloncoin" class="hover:underline">X</a>
       <a href="https://t.me/warloncoin" class="hover:underline">Telegram</a>
     </div>
   </footer>
 
-  <!-- JS: Live SOL price -->
+  <!-- JS: Live SOL price + Lightning GSAP -->
   <script>
     async function updateSolPrice() {
       try {
@@ -254,9 +232,8 @@
       }
     }
     updateSolPrice();
-    setInterval(updateSolPrice, 60000); // обновлять раз в минуту
+    setInterval(updateSolPrice, 60000);
 
-    // Lightning GSAP animation
     gsap.to('.lightning', {
       y: 20,
       repeat: -1,

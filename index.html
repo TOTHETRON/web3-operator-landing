@@ -1,101 +1,72 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Web3 Operator-as-a-Service — Rustam Lukmanov</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.js"></script>
-  <style>
-    body { margin: 0; font-family: 'Inter', sans-serif; background: #0f0f0f; color: #ffffff; line-height: 1.6; }
-    header { background: #1f1f1f; padding: 2rem; text-align: center; }
-    header h1 { font-size: 2rem; margin-bottom: 0.5rem; }
-    header p { color: #bbbbbb; }
-    section { max-width: 800px; margin: 2rem auto; padding: 0 1rem; }
-    h2 { color: #00ffe1; font-size: 1.5rem; margin-bottom: 1rem; }
-    .plan { background: #1b1b1b; padding: 1.5rem; margin-bottom: 1.5rem; border-radius: 12px; border: 1px solid #2a2a2a; }
-    .plan h3 { margin-top: 0; color: #00ffe1; }
-    form { background: #141414; padding: 2rem; border-radius: 12px; border: 1px solid #2a2a2a; }
-    input, textarea, button { width: 100%; padding: 0.75rem; margin-bottom: 1rem; border-radius: 6px; border: none; font-size: 1rem; }
-    input, textarea { background: #222; color: #fff; }
-    button { background: #00ffe1; color: #000; font-weight: 700; cursor: pointer; }
-    footer { text-align: center; font-size: 0.85rem; color: #777; margin-top: 2rem; padding-bottom: 1rem; }
-  </style>
+  <title>$WARLON — The Solana Warlord Meme Token</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Tailwind CDN for fastest launch -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <meta name="description" content="$WARLON: The ultimate degen Solana meme-token, led by the Warlord himself. No mercy. Only pumps.">
+  <link rel="icon" href="images/warlon-hero.png">
 </head>
-<body>
-  <header>
-    <h1>Web3 Operator-as-a-Service</h1>
-    <p>by Rustam Lukmanov — Telegram: @rustamlukmanov</p>
-  </header>
-  <section>
-    <h2>Тарифы (в SOL)</h2>
-    <div class="plan">
-      <h3>🔹 MINI — 10 SOL</h3>
-      <p>Идеально для быстрого запуска и упаковки MVP.</p>
-      <button onclick="sendSol(10)">💸 Оплатить 10 SOL</button>
-    </div>
-    <div class="plan">
-      <h3>🔸 PRO — 20 SOL</h3>
-      <p>Запуск с геймдизайном, памп-моделью, упаковкой.</p>
-      <button onclick="sendSol(20)">💸 Оплатить 20 SOL</button>
-    </div>
-    <div class="plan">
-      <h3>🔻 FULL LAUNCH — 33 SOL</h3>
-      <p>Полный запуск под ключ: команда, автоматизация, рост.</p>
-      <button onclick="sendSol(33)">💸 Оплатить 33 SOL</button>
-    </div>
-    <h2>Оставьте заявку</h2>
-    <form action="#">
-      <input type="text" name="name" placeholder="Ваше имя" required>
-      <input type="email" name="email" placeholder="Ваш email" required>
-      <textarea name="message" placeholder="Расскажите, что хотите запустить" rows="5" required></textarea>
-      <button type="submit">Отправить</button>
-    </form>
-  </section>
-  <footer>
-    &copy; 2025 Rustam Lukmanov. Web3 Launches. All rights reserved.
-  </footer>
-  <script>
-    // Solana получатель
-    const recipient = "GHm2zLZED4uXSRgnKoptjSFgL6dKmZGEbLZSFbbtdryH";
-    // Мобильный ли браузер?
-    function isMobile() { return /Android|iPhone|iPad/i.test(navigator.userAgent); }
+<body class="bg-[#0b0e13] text-white font-mono">
 
-    async function sendSol(amount) {
-      // Если Phantom extension доступен (ПК)
-      if (window.solana && window.solana.isPhantom) {
-        try {
-          await window.solana.connect();
-          const connection = new solanaWeb3.Connection(solanaWeb3.clusterApiUrl("mainnet-beta"));
-          const tx = new solanaWeb3.Transaction().add(
-            solanaWeb3.SystemProgram.transfer({
-              fromPubkey: window.solana.publicKey,
-              toPubkey: new solanaWeb3.PublicKey(recipient),
-              lamports: amount * solanaWeb3.LAMPORTS_PER_SOL
-            })
-          );
-          const { blockhash } = await connection.getLatestBlockhash();
-          tx.recentBlockhash = blockhash.blockhash;
-          tx.feePayer = window.solana.publicKey;
-          const signed = await window.solana.signTransaction(tx);
-          const txid = await connection.sendRawTransaction(signed.serialize());
-          alert("✅ Транзакция отправлена: " + txid);
-        } catch (err) {
-          console.error(err);
-          alert("Ошибка при отправке SOL");
-        }
-      }
-      // Если мобильный — универсальная ссылка на Phantom App с предзаполненным переводом
-      else if (isMobile()) {
-        // Universal Link: откроет Phantom с предзаполненной транзакцией
-        const url = `https://phantom.app/ul/v1/transfer?address=${recipient}&amount=${amount}`;
-        window.location.href = url;
-      }
-      // Если ничего не найдено — показать сообщение
-      else {
-        alert("Phantom Wallet не найден. Установите расширение или приложение Phantom.");
-      }
-    }
-  </script>
+  <!-- HERO -->
+  <section class="flex flex-col items-center justify-center py-12 px-4 bg-gradient-to-b from-[#071d0f] to-[#0b0e13] border-b border-[#202] relative">
+    <img src="images/warlon-hero.png" alt="WARLON HERO" class="w-44 h-44 mb-5 rounded-full border-4 border-[#10ff55] shadow-lg" />
+    <h1 class="text-5xl md:text-6xl font-extrabold text-[#10ff55] tracking-wide mb-2">$WARLON</h1>
+    <p class="text-2xl mb-6 font-semibold">The Solana Warlord Has Entered The Arena</p>
+    <a href="https://pump.fun/" target="_blank"
+       class="bg-[#10ff55] text-[#111] font-bold px-10 py-4 rounded-full text-xl shadow-md hover:bg-[#28ff6f] transition mb-6">
+      BUY $WARLON
+    </a>
+    <!-- Social -->
+    <div class="flex gap-5 mb-3">
+      <a href="https://twitter.com/warloncoin" target="_blank" title="X">
+        <img src="images/x.svg" class="w-7" alt="X" />
+      </a>
+      <a href="https://t.me/warloncoin" target="_blank" title="Telegram">
+        <img src="images/telegram.svg" class="w-7" alt="Telegram" />
+      </a>
+      <a href="https://solscan.io/token/6hnju82mXsgoQkYexCXWdHw7owHb5MQnpFtPqMBpump" target="_blank" title="Solscan">
+        <img src="images/solscan.svg" class="w-7" alt="Solscan" />
+      </a>
+      <a href="https://dexscreener.com/solana/6hnju82mXsgoQkYexCXWdHw7owHb5MQnpFtPqMBpump" target="_blank" title="Dexscreener">
+        <img src="images/dexscreener.svg" class="w-7" alt="Dexscreener" />
+      </a>
+    </div>
+    <div class="text-xs bg-[#1c2420] px-3 py-1 rounded font-mono">CA: 6hnju82mXsgoQkYexCXWdHw7owHb5MQnpFtPqMBpump</div>
+  </section>
+
+  <!-- WHAT IS WARLON -->
+  <section class="flex flex-col items-center pt-14 pb-8">
+    <h2 class="text-2xl font-extrabold mb-3 uppercase tracking-widest text-[#10ff55]">WHAT IS WARLON?</h2>
+    <p class="max-w-2xl text-center text-lg opacity-85 mb-5">
+      $WARLON is the meme-token of Solana's new overlord.  
+      Unstoppable, unliquidated, armored for the bullrun.  
+      The only token that fights the bears with pure, nuclear pump energy.  
+      Join the WARLORDS. Flex your $WARLON.
+    </p>
+  </section>
+
+  <!-- MEME GALLERY -->
+  <section class="py-8 px-2 bg-[#101915] flex flex-col items-center">
+    <h3 class="text-xl font-semibold mb-6 text-[#10ff55]">Memes of Power</h3>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-5 max-w-5xl w-full mb-4">
+      <img src="memes/meme1.png" alt="Warlon Meme 1" class="rounded-xl shadow" />
+      <img src="memes/meme2.png" alt="Warlon Meme 2" class="rounded-xl shadow" />
+      <img src="memes/meme3.png" alt="Warlon Meme 3" class="rounded-xl shadow" />
+      <img src="memes/meme4.png" alt="Warlon Meme 4" class="rounded-xl shadow" />
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="flex flex-col items-center py-8 text-sm opacity-60 mt-8">
+    <div class="mb-1">© 2025 WARLON. All rights reserved. For degen use only. Pump at your own risk.</div>
+    <div class="flex gap-4">
+      <a href="https://twitter.com/warloncoin" class="hover:underline">X</a>
+      <a href="https://t.me/warloncoin" class="hover:underline">Telegram</a>
+    </div>
+  </footer>
 </body>
 </html>
